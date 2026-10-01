@@ -1,0 +1,43 @@
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# WorkBuddy
+.workbuddy/
+
+# Go
+*.exe
+*.test
+*.out
+tunnel/runtime/
+
+# Frontend
+node_modules/
+tunnel-web/dist/
+
+# Binaries / vendored tools
+curl-amd64
+grpc_health_probe-linux-amd64
+
+# Local config / secrets (含真实密钥，不入库)
+*.config.yaml
+*.env
+*.env.*
+!tunnel/dev.config.yaml
+user/user/runtime/logs/
+
+# config with secrets
+**/dev.config.yaml
+*.secret.yaml
+.env
+
+# ignore local config
+tunnel/dev.config.yaml
+tunnel-deploy.yaml
+
+# other secrets
+.env
+*.secret.yaml

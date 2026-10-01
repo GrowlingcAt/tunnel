@@ -1,0 +1,16 @@
+# 后端构建
+FROM --platform=linux/amd64 golang:1.26 AS stage1
+RUN go env -w GOPROXY=https://goproxy.cn,https://proxy.golang.com.cn,direct
+ADD ./tunnel /src/tunnel
+WORKDIR /src/tunnel
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o gateway_cron ./cmd/gateway
+
+FROM --platform=linux/amd64 quay.io/0voice/alpine:3.18 AS stage2
+MAINTAINER GrowlingcAt
+WORKDIR /app/
+ADD ./tunnel/dev.config.yaml /app/config.yaml
+COPY --from=stage1 /src/tunnel/gateway_cron /app
+# 指定入口程序
+ENTRYPOINT ["./gateway_cron"]
+# 指定容器的启动命令或者入口程序的参数
+CMD ["--config=config.yaml"]
