@@ -79,3 +79,42 @@ func (d *aliDns) UpdateSubDomainRemark(recordID, remark string) error {
 	}
 	return nil
 }
+func (d *aliDns) DeleteSubDomainRecord(subDomain string) error {
+	req := &alidns20150109.DescribeSubDomainRecordsRequest{
+		SubDomain:  tea.String(subDomain),
+		DomainName: tea.String(d.rootDomain),
+	}
+
+	runtime := &util.RuntimeOptions{}
+
+	res, err := d.client.DescribeSubDomainRecordsWithOptions(req, runtime)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	if *res.Body.TotalCount == 0 {
+		return nil
+	}
+
+	for _, record := range res.Body.DomainRecords.Record {
+		if *record.RecordId == "" {
+			continue
+		}
+
+		deleteReq := &alidns20150109.DeleteDomainRecordRequest{
+			RecordId: record.RecordId,
+		}
+
+		_, err = d.client.DeleteDomainRecordWithOptions(
+			deleteReq,
+			runtime,
+		)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	}
+
+	return nil
+}

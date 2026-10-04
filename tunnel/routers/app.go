@@ -11,4 +11,5 @@ func InitAppRouters(api *gin.RouterGroup, c *controller.App) {
 	v1.PUT("/app", c.Update)
 	v1.GET("/app", c.List)
 	v1.POST("/app/deploy", c.DeployServer)
+	v1.DELETE("/app", c.Delete)
 }

@@ -20,6 +20,14 @@
         <el-button link type="primary" size="small" @click="editHandleClick(row)">
           Edit
         </el-button>
+        <el-button
+            link
+            type="danger"
+            size="small"
+            @click="deleteHandleClick(row)"
+        >
+          Delete
+        </el-button>
       </template>
     </el-table-column>
     
@@ -67,7 +75,8 @@
 
 <script lang="ts" setup>
 import {reactive, ref, onBeforeMount} from 'vue';
-import { getApplications,addApplication,app, editApplication } from './Applications';
+import { getApplications,addApplication,app, editApplication, deleteApplication } from './Applications';
+import {ElMessage, ElMessageBox} from "element-plus";
 
 
 const dialogFormVisible = ref(false);
@@ -148,6 +157,27 @@ const editHandleClick = (row: any) => {
     dialogFormVisible.value=true;
     dialogTitle.value = 'Edit Application';
 }
+const deleteHandleClick = (row: any) => {
+  ElMessageBox.confirm(
+      `确定要删除应用 "${row.name}" 吗？`,
+      'Delete Application',
+      {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
+      }
+  ).then(() => {
+    deleteApplication(row.id).then(() => {
+      ElMessage.success('删除成功');
+      loadList();
+    }).catch((res) => {
+      console.log(res);
+      ElMessage.error('删除失败');
+    });
+  }).catch(() => {
+    // 用户取消删除
+  });
+};
 const addHandlerClick = () => {
     dialogFormVisible.value = true;
     dialogTitle.value = 'New Application';

@@ -9,6 +9,7 @@ import (
 type ICache interface {
 	HSet(key string, values ...interface{}) error
 	HGetAll(key string) map[string]string
+	HDel(key string, fields ...string) error
 }
 
 type redisCache struct {
@@ -28,4 +29,8 @@ func (c *redisCache) HSet(key string, values ...interface{}) error {
 func (c *redisCache) HGetAll(key string) map[string]string {
 	key = pkg_redis.GetKey(key)
 	return c.client.HGetAll(context.Background(), key).Val()
+}
+func (c *redisCache) HDel(key string, fields ...string) error {
+	key = pkg_redis.GetKey(key)
+	return c.client.HDel(context.Background(), key, fields...).Err()
 }

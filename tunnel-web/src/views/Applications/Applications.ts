@@ -36,3 +36,12 @@ export function editApplication<T=any>(params: app) {
     form.append("local_port", params.local_port.toString());
     return request.put<T>(path, form);
 }
+
+export function deleteApplication<T = any>(id: number) {
+    const path = "/v1/app";
+    return request.delete<T>(path, {
+        params: {
+            app_id: id
+        }
+    });
+}

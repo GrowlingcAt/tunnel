@@ -6,6 +6,7 @@ type IDomainResolution interface {
 	CheckSubDomainExists(subDomain string) (bool, error)
 	AddSubDomainRecord(rr, typ, value string) (string, error)
 	UpdateSubDomainRemark(recordID, remark string) error
+	DeleteSubDomainRecord(subDomain string) error
 }
 type IDNSFactory interface {
 	NewDns() IDomainResolution
